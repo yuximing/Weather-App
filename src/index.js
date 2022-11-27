@@ -1,4 +1,13 @@
-import { StyleSheet, View, Text, Alert, ActivityIndicator } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Constants from 'expo-constants';
 import WeatherInfo from './WeatherInfo';
@@ -8,43 +17,20 @@ const API_KEY = '6280937c8b9027a6d736998a1f909ee1';
 const WeatherApp = () => {
   const [geoData, setGeoData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  // fetch geo data
-  //   const fetchGeoData = async (city) => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=${1}&appid=${API_KEY}`
-  //       );
-  //       if (response.status == 200) {
-  //         const geoData = await response.json();
-  //         setGeoData(data);
-  //       } else {
-  //         setGeoData(null);
-  //       }
-  //     } catch (error) {
-  //       Alert.alert('Error', error.message);
-  //     }
-  //   };
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // fetch the weather data
   const fetchWeatherData = async ({ lat, lon }) => {
     try {
-      //   fetchGeoData(city);
-      // null?
-      console.log('im in fetchWeatherData');
-      console.log(lat);
-      console.log(lon);
+      setIsRefreshing(true);
       const response = await fetch(
         // `https://api.openweathermap.org/data/2.5/weather?q=Kingston,CA&appid=${API_KEY}`
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&appid=${API_KEY}`
+        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=${API_KEY}`
       );
-      //   if (response.status == 200) {
       const data = await response.json();
+      // check if response is ok
       setWeatherData(data);
-      console.log(data);
-      console.log(weatherData);
-      setIsLoaded(true);
+      setIsRefreshing(false);
     } catch (error) {
       Alert.alert('Error', error.message);
     }
@@ -65,22 +51,33 @@ const WeatherApp = () => {
   }, []);
 
   // if not loaded, display a loading page
-  if (!isLoaded) {
+  if (!weatherData) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ActivityIndicator size='large' color='black' />
-      </View>
+      </SafeAreaView>
     );
   }
 
-  // data successfully loaded, display the data
+  // data successfully Refreshing, display the data
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {/* <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={() =>
+              fetchWeatherData({ lat: 44.230687, lon: -76.481323 })
+            }
+          />
+        }
+      > */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Weather</Text>
       </View>
       <WeatherInfo weatherData={weatherData} />
-    </View>
+      {/* </ScrollView> */}
+    </SafeAreaView>
   );
 };
 

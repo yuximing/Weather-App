@@ -5,33 +5,30 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  SectionList,
+  FlatList,
 } from 'react-native';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 
 const WeatherInfo = ({ weatherData }) => {
-  console.log('im in weatherinfo');
   console.log(weatherData);
+  console.log('^^^^^^^^^');
   // when swich to lon and lat, need to cheng the name prop to timezone
   const {
     timezone,
-    // weather: [{ main, icon }],
     current: {
       temp,
       humidity,
       wind_speed,
       weather: [{ main, icon }],
     },
-    // wind: { wind_speed },
-    // rain: { onehr },
     daily: [
       {
         temp: { min, max },
       },
     ],
   } = weatherData;
-  console.log(humidity);
-  console.log('^^^^^^^^^');
   return (
     <SafeAreaView style={styles.container}>
       {/* city name (title)*/}
@@ -44,12 +41,12 @@ const WeatherInfo = ({ weatherData }) => {
           style={styles.largeIcon}
           source={{ uri: `http://openweathermap.org/img/w/${icon}.png` }}
         />
-        <Text style={styles.currTemp}>{temp}</Text>
+        <Text style={styles.currTemp}>{Math.round(temp)}°</Text>
       </View>
       {/* description & min - max */}
       <Text style={styles.centerText}>{main}</Text>
       <Text style={styles.centerText}>
-        L:{min} H:{max}
+        L:{Math.round(min)}° H:{Math.round(max)}°
       </Text>
       {/* extra info: wind_speed, precipitation, humidity */}
       <View style={styles.extraInfo}>
@@ -77,6 +74,41 @@ const WeatherInfo = ({ weatherData }) => {
           </View>
           <Text style={styles.smallInfoCardText}>{humidity}</Text>
         </View>
+      </View>
+      <View>
+        <Text>7-Day Forcast</Text>
+        <FlatList
+          horizontal={false}
+          data={weatherData.daily.slice(1, 8)}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={(day) => {
+            const weather = day.item.weather[0];
+            const temp = day.item.temp;
+            var dt = new Date(day.item.dt * 1000);
+            var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            var dayOfWeek = days[dt.getDay()];
+            console.log(weather);
+            return (
+              <View style={styles.forcastInfoCard}>
+                <View style={styles.forcastInfoLeft}>
+                  <Image
+                    style={styles.smallIcon}
+                    source={{
+                      uri: `http://openweathermap.org/img/w/${weather.icon}.png`,
+                    }}
+                  />
+                  <View style={styles.forcastInfoMain}>
+                    <Text>{dayOfWeek}</Text>
+                    <Text>{weather.description}</Text>
+                  </View>
+                </View>
+                <Text>
+                  {Math.round(temp.min)}° ~ {Math.round(temp.max)}°
+                </Text>
+              </View>
+            );
+          }}
+        />
       </View>
     </SafeAreaView>
   );
@@ -128,5 +160,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignItems: 'center',
     padding: 3,
+  },
+  forcastInfoCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+  smallIcon: {
+    width: 70,
+    height: 70,
+  },
+  forcastInfoLeft: {
+    flexDirection: 'row',
+  },
+  forcastInfoMain: {
+    padding: 10,
   },
 });
