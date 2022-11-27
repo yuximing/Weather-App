@@ -11,7 +11,7 @@ const Search = ({ fetchGeoData }) => {
         placeholder='Search for a city'
         value={city}
         onChangeText={(text) => setCity(text)}
-        onSubmitEditing={fetchGeoData}
+        onSubmitEditing={() => fetchGeoData(city)}
         // onSubmitEditing={() => console.log(city)}
       />
     </View>
