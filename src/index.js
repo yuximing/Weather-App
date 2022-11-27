@@ -11,47 +11,81 @@ import {
 import React, { useEffect, useState } from 'react';
 import Constants from 'expo-constants';
 import WeatherInfo from './WeatherInfo';
+import Search from './Search';
 
 const API_KEY = '6280937c8b9027a6d736998a1f909ee1';
 
 const WeatherApp = () => {
   const [geoData, setGeoData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const fetchGeoData = async (city) => {
+    fetch(
+      `http://api.openweathermap.org/geo/1.0/direct?q=Toronto&limit=5&appid=${API_KEY}`
+    )
+      .then((res) => {
+        if (res.ok) return res.json();
+      })
+      .then((data) => {
+        console.log(data[1]);
+        console.log('#######^^^^^^');
+        setGeoData(data[1]);
+      })
+      .catch((err) => Alert.alert('Error', err.message));
+  };
   // fetch the weather data
   const fetchWeatherData = async ({ lat, lon }) => {
-    try {
-      setIsRefreshing(true);
-      const response = await fetch(
-        // `https://api.openweathermap.org/data/2.5/weather?q=Kingston,CA&appid=${API_KEY}`
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=${API_KEY}`
-      );
-      const data = await response.json();
-      // check if response is ok
-      setWeatherData(data);
-      setIsRefreshing(false);
-    } catch (error) {
-      Alert.alert('Error', error.message);
-    }
+    setIsLoading(true);
+    // await fetchGeoData(city);
+    // console.log('hello from fetchweatherdata');
+    // console.log(geoData);
+    fetch(
+      // `https://api.openweathermap.org/data/2.5/weather?q=Kingston,CA&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=${API_KEY}`
+    )
+      .then((res) => res.json())
+      .then(async (data) => {
+        // console.log(data);
+        // console.log('^^^^^^');
+        // console.log(await getGeoData());
+        console.log('&&&&&&&');
+        setWeatherData(data);
+      })
+      .catch((err) => Alert.alert('Error', err.message))
+      .finally(() => setIsLoading(false));
   };
 
-  useEffect(async () => {
-    const response = await fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=Kingston&limit=5&appid=${API_KEY}`
-    );
-    const data = await response.json();
-    const myKingston = data[1];
-    console.log(data);
-    console.log(myKingston);
-    let lat = myKingston.lat;
-    let lon = myKingston.lon;
-    console.log(lat, lon);
-    fetchWeatherData({ lat, lon });
-  }, []);
+  useEffect(() => {
+    // const response = await fetch(
+    //   `http://api.openweathermap.org/geo/1.0/direct?q=Kingston&limit=5&appid=${API_KEY}`
+    // );
+    // const data = await response.json();
+    // const myKingston = data[1];
+    // console.log(data);
+    // console.log(myKingston);
+    // console.log('hello from use effect');
+    // console.log(geoData);
+    // console.log(geoData.lat, geoData.lon);
+    // let lat = myKingston.lat;
+    // let lon = myKingston.lon;
+    // console.log(lat, lon);
+    console.log('hello from use effect');
+    // console.log(geoData);
+    if (!geoData) {
+      fetchWeatherData({ lat: 44.230687, lon: -76.481323 });
+    } else {
+      let lat = geoData.lat;
+      let lon = geoData.lon;
+      console.log(lat, lon);
+      fetchWeatherData({ lat, lon });
+    }
+    // if geoData is null, set it to current location
+    // fetchWeatherData({ lat: 44.230687, lon: -76.481323 });
+  }, [geoData]);
 
   // if not loaded, display a loading page
-  if (!weatherData) {
+  if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
         <ActivityIndicator size='large' color='black' />
@@ -59,26 +93,29 @@ const WeatherApp = () => {
     );
   }
 
-  // data successfully Refreshing, display the data
-  return (
-    <SafeAreaView style={styles.container}>
-      {/* <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={() =>
-              fetchWeatherData({ lat: 44.230687, lon: -76.481323 })
+  // data successfully Loading, display the data
+  if (weatherData) {
+    return (
+      <SafeAreaView style={styles.container}>
+        {/* <ScrollView
+            refreshControl={
+              <RefreshControl
+                Loading={isLoading}
+                onRefresh={() =>
+                  fetchWeatherData({ lat: 44.230687, lon: -76.481323 })
+                }
+              />
             }
-          />
-        }
-      > */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Weather</Text>
-      </View>
-      <WeatherInfo weatherData={weatherData} />
-      {/* </ScrollView> */}
-    </SafeAreaView>
-  );
+          > */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Weather</Text>
+        </View>
+        <Search fetchGeoData={fetchGeoData} />
+        <WeatherInfo weatherData={weatherData} />
+        {/* </ScrollView> */}
+      </SafeAreaView>
+    );
+  }
 };
 
 export default WeatherApp;

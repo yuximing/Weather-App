@@ -12,8 +12,8 @@ import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 
 const WeatherInfo = ({ weatherData }) => {
-  console.log(weatherData);
-  console.log('^^^^^^^^^');
+//   console.log(weatherData);
+//   console.log('^^^^^^^^^');
   // when swich to lon and lat, need to cheng the name prop to timezone
   const {
     timezone,
@@ -87,7 +87,7 @@ const WeatherInfo = ({ weatherData }) => {
             var dt = new Date(day.item.dt * 1000);
             var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             var dayOfWeek = days[dt.getDay()];
-            console.log(weather);
+            // console.log(weather);
             return (
               <View style={styles.forcastInfoCard}>
                 <View style={styles.forcastInfoLeft}>
