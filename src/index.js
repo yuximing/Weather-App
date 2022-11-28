@@ -5,8 +5,6 @@ import {
   Alert,
   ActivityIndicator,
   SafeAreaView,
-  ScrollView,
-  RefreshControl,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Constants from 'expo-constants';
@@ -22,68 +20,69 @@ const WeatherApp = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchGeoData = async (city) => {
-    fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`
-    )
-      .then((res) => {
-        if (res.ok) return res.json();
-      })
-      .then((data) => {
-        console.log(data[1]);
-        console.log('#######^^^^^^');
-        setGeoData(data[1]);
-      })
-      .catch((err) => Alert.alert('Error', err.message));
+    let isZipcode = /^\d{5}(-\d{4})?$/.test(city);
+    // this zipcode part does not work for now
+    if (isZipcode) {
+      console.log('it is a zipcode input');
+      console.log(typeof parseInt(city));
+      fetch(
+        `http://api.openweathermap.org/geo/1.0/zip?zip=K7L1H6,ca&appid=${API_KEY}`
+      )
+        .then((res) => {
+          if (res.ok) return res.json();
+        })
+        .then((data) => {
+          //   console.log(data[1]);
+          //   console.log('#######^^^^^^');
+          setGeoData(data[1]);
+        })
+        .catch((err) => Alert.alert('Error', err.message));
+    } else {
+      fetch(
+        `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`
+      )
+        .then((res) => {
+          if (res.ok) return res.json();
+        })
+        .then((data) => {
+          console.log(data[1]);
+          console.log('#######^^^^^^');
+          setGeoData(data[1]);
+        })
+        .catch((err) => Alert.alert('Error', err.message));
+    }
   };
   // fetch the weather data
   const fetchWeatherData = async ({ lat, lon }) => {
     setIsLoading(true);
-    // await fetchGeoData(city);
-    // console.log('hello from fetchweatherdata');
-    // console.log(geoData);
     fetch(
-      // `https://api.openweathermap.org/data/2.5/weather?q=Kingston,CA&appid=${API_KEY}`
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${API_KEY}`
     )
       .then((res) => res.json())
       .then(async (data) => {
         // console.log(data);
-        // console.log('^^^^^^');
-        // console.log(await getGeoData());
-        console.log('&&&&&&&');
+        // console.log("^^^^^full data from fetchWeatherData")
         setWeatherData(data);
       })
       .catch((err) => Alert.alert('Error', err.message))
       .finally(() => setIsLoading(false));
   };
 
+  // listen to geoData, whenever updated, refetch weather data
   useEffect(() => {
-    // const response = await fetch(
-    //   `http://api.openweathermap.org/geo/1.0/direct?q=Kingston&limit=5&appid=${API_KEY}`
-    // );
-    // const data = await response.json();
-    // const myKingston = data[1];
-    // console.log(data);
-    // console.log(myKingston);
-    // console.log('hello from use effect');
-    // console.log(geoData);
-    // console.log(geoData.lat, geoData.lon);
-    // let lat = myKingston.lat;
-    // let lon = myKingston.lon;
-    // console.log(lat, lon);
-    console.log('hello from use effect');
-    // console.log(geoData);
+    // initially, geoData is null, ask for user's permision and render weather for current location
     if (!geoData) {
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
+        // permission not granted
         if (status !== 'granted') {
-          console.log('permit noooo');
+          //   console.log('permit noooo');
           setWeatherData(null);
           return;
         }
-        console.log('permit yesss');
+        // permission granted, call fetchWeatherData
+        // console.log('permit yesss');
         let location = await Location.getCurrentPositionAsync({});
-        // console.log('location: ', location);
         let lat = location.coords.latitude;
         let lon = location.coords.longitude;
         fetchWeatherData({ lat, lon });
@@ -95,11 +94,9 @@ const WeatherApp = () => {
       console.log(geoData);
       fetchWeatherData({ lat, lon });
     }
-    // if geoData is null, set it to current location
-    // fetchWeatherData({ lat: 44.230687, lon: -76.481323 });
   }, [geoData]);
 
-  // if not loaded, display a loading page
+  // if info not loaded, display a loading page
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -108,7 +105,7 @@ const WeatherApp = () => {
     );
   }
 
-  // data successfully Loading, display the data
+  // data successfully Loaded, display the data
   if (weatherData) {
     return (
       <SafeAreaView style={styles.container}>
@@ -117,10 +114,11 @@ const WeatherApp = () => {
         </View>
         <Search fetchGeoData={fetchGeoData} />
         <WeatherInfo weatherData={weatherData} geoData={geoData} />
-        {/* </ScrollView> */}
       </SafeAreaView>
     );
-  } else {
+  }
+  // render a welcome page, if the user does not agree to share location
+  else {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -128,8 +126,12 @@ const WeatherApp = () => {
         </View>
 
         <Search fetchGeoData={fetchGeoData} />
-        <Text>Hello!</Text>
-        <Text>Search for a city to check out the weather!</Text>
+        <View style={styles.welcome}>
+          <Text style={styles.welcomeText}>Hello!</Text>
+          <Text style={styles.welcomeText}>
+            {'Search for a city to check out the weather:)'}
+          </Text>
+        </View>
       </SafeAreaView>
     );
   }
@@ -140,11 +142,25 @@ export default WeatherApp;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#dce7ef',
     paddingTop: Constants.statusBarHeight,
   },
   header: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#262626',
+  },
+  welcome: {
+    margin: 30,
+    marginTop: 70,
+    justifyContent: 'center',
+  },
+  welcomeText: {
+    fontSize: 25,
+    fontWeight: '300',
   },
 });

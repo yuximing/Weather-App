@@ -8,11 +8,11 @@ const Search = ({ fetchGeoData }) => {
     <View style={styles.searchBar}>
       <Ionicons name='search' size={24} color='black' />
       <TextInput
+        style={styles.searchTextbox}
         placeholder='Search for a city'
         value={city}
         onChangeText={(text) => setCity(text)}
         onSubmitEditing={() => fetchGeoData(city)}
-        // onSubmitEditing={() => console.log(city)}
       />
     </View>
   );
@@ -24,10 +24,17 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: 'black',
-    borderWidth: 1,
     borderRadius: 15,
-    margin: 10,
+    marginVertical: 10,
+    marginHorizontal: 19,
     padding: 10,
+    backgroundColor: '#cbdbe7',
+    shadowColor: '#323232',
+    shadowOpacity: 0.1,
+    shadowOffset: { height: 5, width: 2 },
+  },
+  searchTextbox: {
+    marginLeft: 10,
+    height: 20,
   },
 });
