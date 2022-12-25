@@ -26,15 +26,15 @@ const WeatherApp = () => {
       console.log('it is a zipcode input');
       console.log(typeof parseInt(city));
       fetch(
-        `http://api.openweathermap.org/geo/1.0/zip?zip=K7L1H6,ca&appid=${API_KEY}`
+        `http://api.openweathermap.org/geo/1.0/zip?zip=10016,us&appid=${API_KEY}`
       )
         .then((res) => {
           if (res.ok) return res.json();
         })
         .then((data) => {
-          //   console.log(data[1]);
-          //   console.log('#######^^^^^^');
-          setGeoData(data[1]);
+          // console.log(data);
+          // console.log('#######^^^^^^HELLO');
+          setGeoData(data);
         })
         .catch((err) => Alert.alert('Error', err.message));
     } else {
@@ -45,8 +45,8 @@ const WeatherApp = () => {
           if (res.ok) return res.json();
         })
         .then((data) => {
-          console.log(data[1]);
-          console.log('#######^^^^^^');
+          // console.log(data);
+          // console.log('#######^^^^^^');
           setGeoData(data[1]);
         })
         .catch((err) => Alert.alert('Error', err.message));
@@ -60,8 +60,6 @@ const WeatherApp = () => {
     )
       .then((res) => res.json())
       .then(async (data) => {
-        // console.log(data);
-        // console.log("^^^^^full data from fetchWeatherData")
         setWeatherData(data);
       })
       .catch((err) => Alert.alert('Error', err.message))
@@ -112,7 +110,7 @@ const WeatherApp = () => {
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Weather</Text>
         </View>
-        <Search fetchGeoData={fetchGeoData} />
+        <Search fetchGeoData={fetchGeoData} setGeoData={setGeoData} />
         <WeatherInfo weatherData={weatherData} geoData={geoData} />
       </SafeAreaView>
     );
@@ -125,7 +123,7 @@ const WeatherApp = () => {
           <Text style={styles.headerTitle}>Weather</Text>
         </View>
 
-        <Search fetchGeoData={fetchGeoData} />
+        <Search fetchGeoData={fetchGeoData} setGeoData={setGeoData} />
         <View style={styles.welcome}>
           <Text style={styles.welcomeText}>Hello!</Text>
           <Text style={styles.welcomeText}>
