@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const WeatherInfo = ({ weatherData, geoData }) => {
   const {
@@ -32,23 +33,37 @@ const WeatherInfo = ({ weatherData, geoData }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {/* city name (title)*/}
-        <View style={{ alignItems: 'center' }}>
-          <Text style={styles.title}>{name}</Text>
-        </View>
-        {/* icon & current temp */}
         <View style={styles.currWeather}>
-          <Text style={styles.currTemp}>{Math.round(temp)}°</Text>
-          <Image
-            style={styles.largeIcon}
-            source={{ uri: `http://openweathermap.org/img/w/${icon}.png` }}
-          />
+          <LinearGradient
+            // style={styles.currWeather}
+            style={{
+              borderRadius: 30,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+            colors={['#68e2d3aa', '#00bcff', '#5aa6f0']}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 0.85, 0.95]}
+          >
+            <View style={styles.currLeft}>
+              <Image
+                style={styles.largeIcon}
+                source={{ uri: `http://openweathermap.org/img/wn/${icon}.png` }}
+              />
+              <Text style={styles.currText}>{description}</Text>
+              <Text style={styles.currText}>
+                H: {Math.round(max)}° L: {Math.round(min)}°
+              </Text>
+            </View>
+            <View style={styles.currRight}>
+              <Text style={styles.location}>{name}</Text>
+              <Text style={styles.currTemp}>{Math.round(temp)}°</Text>
+              {/* description & min - max */}
+            </View>
+          </LinearGradient>
         </View>
-        {/* description & min - max */}
-        <Text style={styles.centerText}>{description}</Text>
-        <Text style={styles.centerText}>
-          {Math.round(min)}° / {Math.round(max)}°
-        </Text>
         {/* extra info: feels_life, wind_speed, precipitation, humidity */}
         <View style={styles.extraInfo}>
           {/* feels_like */}
@@ -133,39 +148,74 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 15,
+    zIndex: -1,
   },
-  title: {
+  location: {
     width: '100%',
-    textAlign: 'center',
+    // textAlign: 'center',
     marginTop: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#262626',
+    color: '#f2f2f2',
   },
   currWeather: {
+    shadowColor: '#000000',
+    shadowOpacity: 0.1,
+    shadowOffset: { height: 7, width: 3 },
     flexDirection: 'column',
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
+    // padding: 10,
+    // marginVertical: 10,
+    marginBottom: 10,
+    marginHorizontal: 19,
+    backgroundColor: 'transparent',
+
+    // borderWidth: 1,
+
+    borderRadius: 30,
+  },
+  currLeft: {
+    padding: 15,
+    paddingBottom:20,
+    marginLeft: 10,
+    display: 'flex',
+    paddingLeft: 20,
+    // justifyContent: 'flex-end',
+    // alignItems: 'flex-start',
+  },
+  currRight: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    padding: 10,
+    paddingRight: 15,
+    marginRight: 10,
   },
   largeIcon: {
     marginTop: -13,
-    marginBottom: -14,
-    width: 115,
-    height: 115,
+    marginBottom: -25,
+    marginLeft: -27,
+    width: 130,
+    height: 130,
   },
   currTemp: {
     // textAlign: 'center',
     fontSize: 75,
     // fontFamily: 'Open Sans',
-    marginTop: 4,
+    marginTop: -4,
     marginBottom: -10,
-    color: '#333333',
+    color: '#f2f2f2',
   },
   centerText: {
     textAlign: 'center',
     marginBottom: 3,
     fontSize: 18,
     color: '#262626',
+  },
+  currText: {
+    fontSize: 18,
+    color: '#f2f2f2',
+    // fontWeight: 'bold',
   },
   extraInfo: {
     flexDirection: 'row',

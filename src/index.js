@@ -140,22 +140,26 @@ export default WeatherApp;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#dce7ef',
-    paddingTop: Constants.statusBarHeight,
+    // backgroundColor: '#dce7ef',
+    backgroundColor: '#f0fefc',
+    // paddingTop: Constants.statusBarHeight,
   },
   header: {
     alignItems: 'center',
     justifyContent: 'center',
+    height: 35,
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#262626',
+    // color: '#262626',
+    color: '#131415',
   },
   welcome: {
     margin: 30,
     marginTop: 70,
     justifyContent: 'center',
+    zIndex: -1,
   },
   welcomeText: {
     fontSize: 25,
