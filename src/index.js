@@ -140,8 +140,7 @@ export default WeatherApp;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#dce7ef',
-    backgroundColor: '#f0fefc',
+    backgroundColor: '#f2f2f2aa',
     // paddingTop: Constants.statusBarHeight,
   },
   header: {

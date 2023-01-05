@@ -29,29 +29,48 @@ const WeatherInfo = ({ weatherData, geoData }) => {
   const { name } = geoData;
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const forcast = weatherData.daily.slice(1, 8);
+  const icons = {
+    '01d': require('./../assets/Icons/01d.png'),
+    '01n': require('./../assets/Icons/01n.png'),
+    '02d': require('./../assets/Icons/02d.png'),
+    '02n': require('./../assets/Icons/02n.png'),
+    '03d': require('./../assets/Icons/03d.png'),
+    '03n': require('./../assets/Icons/03n.png'),
+    '04d': require('./../assets/Icons/04d.png'),
+    '04n': require('./../assets/Icons/04n.png'),
+    '09d': require('./../assets/Icons/09d.png'),
+    '09n': require('./../assets/Icons/09n.png'),
+    '10d': require('./../assets/Icons/10d.png'),
+    '10n': require('./../assets/Icons/10n.png'),
+    '11d': require('./../assets/Icons/11d.png'),
+    '11n': require('./../assets/Icons/11n.png'),
+    '13d': require('./../assets/Icons/13d.png'),
+    '13n': require('./../assets/Icons/13n.png'),
+    '50d': require('./../assets/Icons/50d.png'),
+    '50n': require('./../assets/Icons/50n.png'),
+  };
+  const f = { a: 'abc' };
+  console.log(f['a']);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.currWeather}>
           <LinearGradient
-            // style={styles.currWeather}
             style={{
               borderRadius: 30,
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-between',
+              height: '100%',
+              width: '100%',
             }}
-            colors={['#68e2d3aa', '#00bcff', '#5aa6f0']}
+            colors={['#aecdff', '#5896fd']}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 1 }}
-            locations={[0, 0.85, 0.95]}
+            locations={[0, 0.85]}
           >
             <View style={styles.currLeft}>
-              <Image
-                style={styles.largeIcon}
-                source={{ uri: `http://openweathermap.org/img/wn/${icon}.png` }}
-              />
               <Text style={styles.currText}>{description}</Text>
               <Text style={styles.currText}>
                 H: {Math.round(max)}° L: {Math.round(min)}°
@@ -63,13 +82,16 @@ const WeatherInfo = ({ weatherData, geoData }) => {
               {/* description & min - max */}
             </View>
           </LinearGradient>
+          <View>
+            <Image style={styles.largeIcon} source={icons[icon]} />
+          </View>
         </View>
         {/* extra info: feels_life, wind_speed, precipitation, humidity */}
         <View style={styles.extraInfo}>
           {/* feels_like */}
           <View style={styles.smallInfoCard}>
             <View style={styles.smallInfoCardHeader}>
-              <FontAwesome5 name='temperature-high' size={24} color='black' />
+              <FontAwesome5 name='temperature-high' size={24} color='#6a55f7' />
               <Text style={styles.smallInfoCardHeaderText}>Feels like</Text>
             </View>
             <Text style={styles.smallInfoCardText}>
@@ -79,17 +101,15 @@ const WeatherInfo = ({ weatherData, geoData }) => {
           {/* humidity */}
           <View style={styles.smallInfoCard}>
             <View style={styles.smallInfoCardHeader}>
-              <FontAwesome5 name='water' size={24} color='black' />
+              <FontAwesome5 name='water' size={24} color='#6a55f7' />
               <Text style={styles.smallInfoCardHeaderText}>Humidity</Text>
             </View>
             <Text style={styles.smallInfoCardText}>{humidity}%</Text>
           </View>
-        </View>
-        <View style={styles.extraInfo}>
           {/* wind_speed */}
           <View style={styles.smallInfoCard}>
             <View style={styles.smallInfoCardHeader}>
-              <FontAwesome5 name='wind' size={24} color='black' />
+              <FontAwesome5 name='wind' size={24} color='#6a55f7' />
               <Text style={styles.smallInfoCardHeaderText}>Wind</Text>
             </View>
             <Text style={styles.smallInfoCardText}>{wind_speed} m/s</Text>
@@ -97,11 +117,10 @@ const WeatherInfo = ({ weatherData, geoData }) => {
           {/* precipitation */}
           <View style={styles.smallInfoCard}>
             <View style={styles.smallInfoCardHeader}>
-              <Entypo name='water' size={24} color='black' />
-              <Text style={styles.smallInfoCardHeaderText}>Precipitation</Text>
+              <Entypo name='water' size={24} color='#6a55f7' />
+              <Text style={styles.smallInfoCardHeaderText}>Rainfall</Text>
             </View>
             <Text style={styles.smallInfoCardText}>0 mm</Text>
-            <Text style={styles.smallInfoCardText}> for the last hour</Text>
           </View>
         </View>
 
@@ -113,14 +132,14 @@ const WeatherInfo = ({ weatherData, geoData }) => {
               const temp = day.temp;
               var dt = new Date(day.dt * 1000);
               var dayOfWeek = days[dt.getDay()];
+              var iconID = weather.icon;
               return (
                 <View style={styles.forcastInfoCard}>
                   <View style={styles.forcastInfoLeft}>
                     <Image
                       style={styles.smallIcon}
-                      source={{
-                        uri: `http://openweathermap.org/img/w/${weather.icon}.png`,
-                      }}
+                      key={iconID}
+                      source={icons[iconID]}
                     />
                     <View style={styles.forcastInfoMain}>
                       <Text style={styles.forcastInfoDay}>{dayOfWeek}</Text>
@@ -159,52 +178,52 @@ const styles = StyleSheet.create({
     color: '#f2f2f2',
   },
   currWeather: {
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowOffset: { height: 7, width: 3 },
+    shadowColor: '#5896fd',
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    shadowOffset: { height: 9, width: 4 },
     flexDirection: 'column',
-    // alignItems: 'center',
     justifyContent: 'center',
-    // padding: 10,
-    // marginVertical: 10,
+    marginTop: 25,
     marginBottom: 10,
     marginHorizontal: 19,
     backgroundColor: 'transparent',
-
-    // borderWidth: 1,
-
     borderRadius: 30,
+    height: 180,
+    overflow: 'visible',
   },
   currLeft: {
     padding: 15,
-    paddingBottom:20,
-    marginLeft: 10,
+    paddingBottom: 20,
+    marginLeft: 20,
     display: 'flex',
-    paddingLeft: 20,
-    // justifyContent: 'flex-end',
-    // alignItems: 'flex-start',
+    paddingLeft: 10,
+    justifyContent: 'flex-end',
   },
   currRight: {
     display: 'flex',
     alignItems: 'flex-end',
     padding: 10,
     paddingRight: 15,
-    marginRight: 10,
+    marginRight: 15,
+    flexDirection: 'column',
   },
   largeIcon: {
-    marginTop: -13,
-    marginBottom: -25,
-    marginLeft: -27,
-    width: 130,
-    height: 130,
+    position: 'absolute',
+    width: 210,
+    height: 210,
+    top: -250,
+    left: -10,
   },
   currTemp: {
-    // textAlign: 'center',
-    fontSize: 75,
-    // fontFamily: 'Open Sans',
+    fontSize: 80,
     marginTop: -4,
     marginBottom: -10,
     color: '#f2f2f2',
+    fontWeight: '800',
+    textShadowColor: '#000000',
+    textShadowOffset: { height: 2, width: 1 },
+    shadowOpacity: 0.2,
   },
   centerText: {
     textAlign: 'center',
@@ -215,79 +234,85 @@ const styles = StyleSheet.create({
   currText: {
     fontSize: 18,
     color: '#f2f2f2',
-    // fontWeight: 'bold',
+    fontWeight: '900',
+    padding: 2,
   },
   extraInfo: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
+    justifyContent: 'space-between',
+    marginHorizontal: 19,
+    marginVertical: 10,
   },
   smallInfoCard: {
-    width: Dimensions.get('screen').width / 2.5,
-    height: 70,
-    padding: 7,
+    width: 73,
+    height: 100,
     backgroundColor: '#ffffff',
-    // borderColor: 'black',
-    borderRadius: 15,
-    // borderWidth: 1,
+    borderRadius: 30,
     shadowColor: '#323232',
     shadowOpacity: 0.1,
     shadowOffset: { height: 5, width: 2 },
+    paddingTop: 8,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
   },
   smallInfoCardHeader: {
-    flexDirection: 'row',
-    paddingHorizontal: 8,
-    paddingTop: 3,
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingHorizontal: 7,
+    paddingTop: 4,
   },
   smallInfoCardHeaderText: {
-    paddingLeft: 15,
-    paddingTop: 4,
-    font: 13,
+    fontSize: 13,
     fontWeight: 'bold',
-    color: '#262626',
+    color: '#c2c2d6',
+    paddingTop: 5,
   },
   smallInfoCardText: {
     textAlign: 'center',
     alignItems: 'center',
-    padding: 0,
     font: 13,
-    color: '#262626',
+    fontWeight: 'bold',
+    color: '#404040',
+    paddingBottom: 9,
   },
   forcast: {
     flex: 1,
-    margin: 10,
   },
   forcastTitle: {
     fontSize: 20,
-    paddingLeft: 21,
+    paddingLeft: 26,
     fontWeight: 'bold',
     color: '#262626',
+    paddingVertical: 8,
   },
   forcastList: {
-    margin: 10,
+    // margin: 10,
   },
   forcastInfoCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15,
-    margin: 10,
+    padding: 5,
+    marginHorizontal: 19,
+    marginVertical: 10,
     backgroundColor: '#ffffff',
-    // borderColor: 'black',
-    borderRadius: 15,
-    // borderWidth: 1,
+    borderRadius: 25,
     shadowColor: '#323232',
+    shadowColor: '#5896fd',
     shadowOpacity: 0.1,
     shadowOffset: { height: 5, width: 2 },
+    overflow: 'visible',
+    height: 70,
   },
   smallIcon: {
     width: 70,
     height: 70,
+    marginTop: -8,
   },
   forcastInfoLeft: {
     flexDirection: 'row',
   },
   forcastInfoMain: {
-    padding: 10,
+    padding: 8,
     marginTop: 5,
   },
   forcastInfoDay: {
@@ -297,13 +322,14 @@ const styles = StyleSheet.create({
   },
   forcastInfoText: {
     paddingTop: 2,
-    color: '#262626',
+    fontWeight: 'bold',
+    color: '#5896fd',
   },
   forcastInfoRight: {
-    marginTop: 20,
+    marginTop: 18,
     fontSize: 21,
     marginRight: 13,
-    color: '#262626',
-    fontWeight: '500',
+    color: '#808080',
+    fontWeight: '600',
   },
 });
