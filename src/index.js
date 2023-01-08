@@ -11,6 +11,7 @@ import Constants from 'expo-constants';
 import WeatherInfo from './WeatherInfo';
 import Search from './Search';
 import * as Location from 'expo-location';
+import Home from './Home';
 
 const API_KEY = '6280937c8b9027a6d736998a1f909ee1';
 
@@ -19,49 +20,14 @@ const WeatherApp = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchGeoData = async (city) => {
-    let isZipcode = /^\d{5}(-\d{4})?$/.test(city);
-    // this zipcode part does not work for now
-    if (isZipcode) {
-      console.log('it is a zipcode input');
-      console.log(typeof parseInt(city));
-      fetch(
-        `http://api.openweathermap.org/geo/1.0/zip?zip=K7L1H6,ca&appid=${API_KEY}`
-      )
-        .then((res) => {
-          if (res.ok) return res.json();
-        })
-        .then((data) => {
-          //   console.log(data[1]);
-          //   console.log('#######^^^^^^');
-          setGeoData(data[1]);
-        })
-        .catch((err) => Alert.alert('Error', err.message));
-    } else {
-      fetch(
-        `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_KEY}`
-      )
-        .then((res) => {
-          if (res.ok) return res.json();
-        })
-        .then((data) => {
-          console.log(data[1]);
-          console.log('#######^^^^^^');
-          setGeoData(data[1]);
-        })
-        .catch((err) => Alert.alert('Error', err.message));
-    }
-  };
   // fetch the weather data
   const fetchWeatherData = async ({ lat, lon }) => {
     setIsLoading(true);
     fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=alerts&units=metric&appid=${API_KEY}`
     )
       .then((res) => res.json())
       .then(async (data) => {
-        // console.log(data);
-        // console.log("^^^^^full data from fetchWeatherData")
         setWeatherData(data);
       })
       .catch((err) => Alert.alert('Error', err.message))
@@ -76,12 +42,10 @@ const WeatherApp = () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         // permission not granted
         if (status !== 'granted') {
-          //   console.log('permit noooo');
           setWeatherData(null);
           return;
         }
         // permission granted, call fetchWeatherData
-        // console.log('permit yesss');
         let location = await Location.getCurrentPositionAsync({});
         let lat = location.coords.latitude;
         let lon = location.coords.longitude;
@@ -90,7 +54,6 @@ const WeatherApp = () => {
     } else {
       let lat = geoData.lat;
       let lon = geoData.lon;
-      //   console.log(lat, lon);
       console.log(geoData);
       fetchWeatherData({ lat, lon });
     }
@@ -112,7 +75,7 @@ const WeatherApp = () => {
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Weather</Text>
         </View>
-        <Search fetchGeoData={fetchGeoData} />
+        <Search setGeoData={setGeoData} />
         <WeatherInfo weatherData={weatherData} geoData={geoData} />
       </SafeAreaView>
     );
@@ -121,17 +84,7 @@ const WeatherApp = () => {
   else {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Weather</Text>
-        </View>
-
-        <Search fetchGeoData={fetchGeoData} />
-        <View style={styles.welcome}>
-          <Text style={styles.welcomeText}>Hello!</Text>
-          <Text style={styles.welcomeText}>
-            {'Search for a city to check out the weather:)'}
-          </Text>
-        </View>
+        <Home setGeoData={setGeoData} />
       </SafeAreaView>
     );
   }
@@ -142,25 +95,37 @@ export default WeatherApp;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#dce7ef',
-    paddingTop: Constants.statusBarHeight,
+    backgroundColor: '#f2f2f2aa',
+    // paddingTop: Constants.statusBarHeight,
   },
   header: {
     alignItems: 'center',
     justifyContent: 'center',
+    height: 35,
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#262626',
+    // color: '#262626',
+    color: '#131415',
   },
   welcome: {
     margin: 30,
-    marginTop: 70,
+    marginTop: 60,
     justifyContent: 'center',
+    zIndex: -1,
   },
-  welcomeText: {
-    fontSize: 25,
-    fontWeight: '300',
+  welcomeText1: {
+    fontSize: '40',
+    fontWeight: 'bold',
+    paddingBottom: 13,
+    color: '#33334d',
+  },
+  welcomeText2: {
+    fontSize: '20',
+    fontWeight: '450',
+    color: '#9494b8',
+    width: 250,
+    fontWeight: 'bold',
   },
 });
