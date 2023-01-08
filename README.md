@@ -1,10 +1,19 @@
-# weather-app
-Instructions:
-To run the app on a iOS simulator or Andriod emulator,
-  1. Clone the repo to your local
-  2. Go to the project folder
-  3. Run "npm start" in the terminal
-  4. Scan the QR code with Expo Go or press i to open iOS simulator/ a to open Andriod
+# MyWeather ☀️
+A weather application showing current weather data and the forcast for the next 7 days. Users can search by the city name. Real-time weather data is fetched using OpenWeather API.
 
-Note:
-Searching by zip code is not fully funcational yet.
+## Preview ❄️
+<img src="https://cdn.discordapp.com/attachments/1011065363401814099/1061469556440318034/Simulator_Screen_Shot_-_iPhone_12_-_2023-01-05_at_00.50.43.png" width="250">
+
+## Technologies 💡
+- React Native
+- JavaScript
+- OpenWeather API
+
+## Setup 💻
+- Download or clone the repository
+- Run `npm start`
+- Scan the QR code with Expo Go or press i to open iOS simulator/ a to open Andriod
+
+
+## Credits 🖋
+Art: [Weatherly 3D Icons](https://www.behance.net/gallery/104990647/Weatherly-3D-icons-50-weather-icons)
