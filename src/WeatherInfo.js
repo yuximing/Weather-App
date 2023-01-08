@@ -49,12 +49,11 @@ const WeatherInfo = ({ weatherData, geoData }) => {
     '50d': require('./../assets/Icons/50d.png'),
     '50n': require('./../assets/Icons/50n.png'),
   };
-  const f = { a: 'abc' };
-  console.log(f['a']);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+        {/* Current weather info card */}
         <View style={styles.currWeather}>
           <LinearGradient
             style={{
@@ -79,7 +78,6 @@ const WeatherInfo = ({ weatherData, geoData }) => {
             <View style={styles.currRight}>
               <Text style={styles.location}>{name}</Text>
               <Text style={styles.currTemp}>{Math.round(temp)}°</Text>
-              {/* description & min - max */}
             </View>
           </LinearGradient>
           <View>
@@ -120,7 +118,9 @@ const WeatherInfo = ({ weatherData, geoData }) => {
               <Entypo name='water' size={24} color='#6a55f7' />
               <Text style={styles.smallInfoCardHeaderText}>Rainfall</Text>
             </View>
-            <Text style={styles.smallInfoCardText}>0 mm</Text>
+            <Text style={styles.smallInfoCardText}>
+              {weatherData.minutely[0].precipitation} mm
+            </Text>
           </View>
         </View>
 
@@ -134,7 +134,7 @@ const WeatherInfo = ({ weatherData, geoData }) => {
               var dayOfWeek = days[dt.getDay()];
               var iconID = weather.icon;
               return (
-                <View style={styles.forcastInfoCard}>
+                <View style={styles.forcastInfoCard} key={dayOfWeek}>
                   <View style={styles.forcastInfoLeft}>
                     <Image
                       style={styles.smallIcon}

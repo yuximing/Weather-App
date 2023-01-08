@@ -18,7 +18,6 @@ const Search = (props) => {
   const [input, setInput] = useState('');
   const [geoList, setGeoList] = useState(null);
   const [submitted, setSubmitted] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
 
   const fetchGeoList = async (input) => {
     fetch(
@@ -54,34 +53,6 @@ const Search = (props) => {
           }}
         />
       </View>
-      {/* {submitted && (
-        <View style={styles.optionList}>
-          {geoList.map((item) => {
-            return (
-              <TouchableOpacity
-                style={styles.option}
-                // set submitted back to false so that the option list is removed
-                // set the geoData to the selected option so that the weather info is updated and displayed
-                onPress={() => {
-                  setSubmitted(false);
-                  props.setGeoData(item);
-                }}
-              > */}
-      {/* remove the state field if empty */}
-      {/* {item.state ? (
-                  <Text>
-                    {item.name}, {item.state}, {item.country}
-                  </Text>
-                ) : (
-                  <Text>
-                    {item.name}, {item.country}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      )} */}
       <Modal transparent={true} visible={submitted} animationType='fade'>
         <TouchableOpacity
           onPress={() => setSubmitted(false)}
