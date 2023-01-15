@@ -28,7 +28,7 @@ const WeatherInfo = ({ weatherData, geoData }) => {
   } = weatherData;
   const { name } = geoData;
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const forcast = weatherData.daily.slice(1, 8);
+  const forecast = weatherData.daily.slice(1, 8);
   const icons = {
     '01d': require('./../assets/Icons/01d.png'),
     '01n': require('./../assets/Icons/01n.png'),
@@ -124,31 +124,31 @@ const WeatherInfo = ({ weatherData, geoData }) => {
           </View>
         </View>
 
-        <View style={styles.forcast}>
-          <Text style={styles.forcastTitle}>7-Day Forcast</Text>
-          <View style={styles.forcastList}>
-            {forcast.map((day) => {
+        <View style={styles.forecast}>
+          <Text style={styles.forecastTitle}>7-Day Forecast</Text>
+          <View style={styles.forecastList}>
+            {forecast.map((day) => {
               const weather = day.weather[0];
               const temp = day.temp;
               var dt = new Date(day.dt * 1000);
               var dayOfWeek = days[dt.getDay()];
               var iconID = weather.icon;
               return (
-                <View style={styles.forcastInfoCard} key={dayOfWeek}>
-                  <View style={styles.forcastInfoLeft}>
+                <View style={styles.forecastInfoCard} key={dayOfWeek}>
+                  <View style={styles.forecastInfoLeft}>
                     <Image
                       style={styles.smallIcon}
                       key={iconID}
                       source={icons[iconID]}
                     />
-                    <View style={styles.forcastInfoMain}>
-                      <Text style={styles.forcastInfoDay}>{dayOfWeek}</Text>
-                      <Text style={styles.forcastInfoText}>
+                    <View style={styles.forecastInfoMain}>
+                      <Text style={styles.forecastInfoDay}>{dayOfWeek}</Text>
+                      <Text style={styles.forecastInfoText}>
                         {weather.description}
                       </Text>
                     </View>
                   </View>
-                  <Text style={styles.forcastInfoRight}>
+                  <Text style={styles.forecastInfoRight}>
                     {Math.round(temp.min)}° / {Math.round(temp.max)}°
                   </Text>
                 </View>
@@ -275,20 +275,20 @@ const styles = StyleSheet.create({
     color: '#404040',
     paddingBottom: 9,
   },
-  forcast: {
+  forecast: {
     flex: 1,
   },
-  forcastTitle: {
+  forecastTitle: {
     fontSize: 20,
     paddingLeft: 26,
     fontWeight: 'bold',
     color: '#262626',
     paddingVertical: 8,
   },
-  forcastList: {
+  forecastList: {
     // margin: 10,
   },
-  forcastInfoCard: {
+  forecastInfoCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 5,
@@ -308,24 +308,24 @@ const styles = StyleSheet.create({
     height: 70,
     marginTop: -8,
   },
-  forcastInfoLeft: {
+  forecastInfoLeft: {
     flexDirection: 'row',
   },
-  forcastInfoMain: {
+  forecastInfoMain: {
     padding: 8,
     marginTop: 5,
   },
-  forcastInfoDay: {
+  forecastInfoDay: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#262626',
   },
-  forcastInfoText: {
+  forecastInfoText: {
     paddingTop: 2,
     fontWeight: 'bold',
     color: '#5896fd',
   },
-  forcastInfoRight: {
+  forecastInfoRight: {
     marginTop: 18,
     fontSize: 21,
     marginRight: 13,
