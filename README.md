@@ -1,8 +1,8 @@
 # MyWeather ☀️
-A weather application showing current weather data and the forcast for the next 7 days. Users can search by the city name. Real-time weather data is fetched using OpenWeather API.
+A weather application showing current weather data and the forecast for the next 7 days. Users can search by the city name. Real-time weather data is fetched using OpenWeather API.
 
 ## Preview ❄️
-<img src="https://cdn.discordapp.com/attachments/1011065363401814099/1061469556440318034/Simulator_Screen_Shot_-_iPhone_12_-_2023-01-05_at_00.50.43.png" width="250">
+<img src="https://cdn.discordapp.com/attachments/1011065363401814099/1064214389508554883/Simulator_Screen_Shot_-_iPhone_12_-_2023-01-15_at_11.07.01.png" width="250">
 
 ## Technologies 💡
 - React Native
